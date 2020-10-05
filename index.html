@@ -28,6 +28,14 @@
                         <section class="row">
                             <section class="col-md-12" id="searchForm">
                                 <!-- search city form  -->
+                                <h5>Search for a City:</h5>
+                                <form class="form-inline">
+                                    <div class="form-group row">
+                                        <input class="form-control" id="city" type="text">
+                                        <button type="button" class="btn btn-primary" id="searchBtn"><img>S</button> 
+                                    </div>
+                                                                               
+                                </form>
                             </section>
                         </section>
                         <section class="row">
@@ -41,6 +49,11 @@
                         <section class="row">
                             <section class="col-md-12" id="cityData">
                                 <!-- City weather data box  -->
+                                <h2 id="cityAndDate">Atlanta</h2>
+                                <p id="temperature">hot</p>
+                                <p id="humidity">Humid</p>
+                                <p id="windSpeed">no wind</p>
+                                <p id="UVIndex">UV high</p>
                             </section>
                         </section>
                         <section class="row">
@@ -52,7 +65,8 @@
                 </section>
             </section>
         </main>
-        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
         <script src="script.js" type="text/javascript"></script>
     </body>
 </html>
