@@ -1,6 +1,6 @@
 
-
 $(document).ready(function() {
+    updateHistory();
     var date =  moment().format("YYYY-MM-DD");
     // console.log(date);
     var dateArray = date.split("-");
@@ -12,8 +12,52 @@ $(document).ready(function() {
     var UVqueryURL;
     var lat;
     var lon;
-    var cityArray = [];
+    if (JSON.parse(localStorage.getItem("cityArray")) == null) {
+        var cityArray = [];
+    } else {
+        var cityArray = JSON.parse(localStorage.getItem("cityArray"));
+    }
     
+    
+    $("#searchBtn").on("click", function() { //clicking this erases current list
+        // $(".search").on("click", function() {
+            // console.log($(this).val());
+            city = $(("#city")).val();
+            queryURL = "https://api.openweathermap.org/data/2.5/weather?" + "q=" + city + "&appid=" + APIKey + "&units=imperial";
+            
+            getCityData(APIKey, queryURL, city);
+            // localStorage.setItem(city, JSON.stringify(cityObject));
+            if (cityArray.indexOf(city) != -1) {
+                cityArray = deleteElement(cityArray.indexOf(city), cityArray);
+            }
+            cityArray.push(city);
+            localStorage.setItem("cityArray", JSON.stringify(cityArray));
+            console.log(cityArray);
+    
+            updateHistory();
+        });
+
+    $(document).on("click", ".history", function() {
+        console.log($(this).attr("data-name"));
+            city = $(this).attr("data-name");
+            console.log(city);
+            queryURL = "https://api.openweathermap.org/data/2.5/weather?" + "q=" + city + "&appid=" + APIKey + "&units=imperial";
+            
+            getCityData(APIKey, queryURL, city);
+            // localStorage.setItem(city, JSON.stringify(cityObject));
+            if (cityArray.indexOf(city) != -1) {
+                cityArray = deleteElement(cityArray.indexOf(city), cityArray);
+            }
+            cityArray.push(city);
+            localStorage.setItem("cityArray", JSON.stringify(cityArray));
+            console.log(cityArray);
+    
+            updateHistory();
+    });
+    // $("#searchHistory").on("click", function() {
+        // $(".search").on("click", function() {
+
+
     function getCityData(APIKey, queryURL, city) {
         $.ajax({
         url: queryURL,
@@ -21,40 +65,16 @@ $(document).ready(function() {
         }).then(function(response) {
             var cityObject = response;
             console.log(cityObject);
-            localStorage.setItem(city, JSON.stringify(response));
-            //   var temp = response.main.temp;
-            // temp = (temp - 273.15) * 1.80 + 32;
-            //   var lon = response.coord.lon;
-            //   var lat = response.coord.lat;
-            //   var location = response.name;
-            //   var windSpeed = response.wind.speed;
-            //   var humidity = response.main.humidity;
-        
-        // var newRow = $("<tr>");
-        // newRow.append($("<td>" + location + "</td>"));
-        // newRow.append($("<td>" + location + "</td>"));
-        $("#windSpeed").text("Wind Speed: " + response.wind.speed + " MPH");
-        $("#humidity").text("Humidity: " + response.main.humidity + " %");
-        $("#temperature").text(" Temperature: " + response.main.temp + " ^F");
-        $("#cityAndDate").text(response.name + " (" + dateDisplay + ")");
-        UVqueryURL = "http://api.openweathermap.org/data/2.5/uvi?lat=" + response.coord.lat + "&lon=" + response.coord.lon + "&appid=" + APIKey;
-        getUVIndex(APIKey, UVqueryURL);
+            // localStorage.setItem(city, JSON.stringify(response));
+            
+            $("#windSpeed").text("Wind Speed: " + response.wind.speed + " MPH");
+            $("#humidity").text("Humidity: " + response.main.humidity + " %");
+            $("#temperature").text(" Temperature: " + response.main.temp + " ^F");
+            $("#cityAndDate").text(response.name + " (" + dateDisplay + ")");
+            UVqueryURL = "http://api.openweathermap.org/data/2.5/uvi?lat=" + response.coord.lat + "&lon=" + response.coord.lon + "&appid=" + APIKey;
+            getUVIndex(APIKey, UVqueryURL);
         });
     }
-    $("#searchBtn").on("click", function() {
-        city = $(".city").val();
-        queryURL = "https://api.openweathermap.org/data/2.5/weather?" + "q=" + city + "&appid=" + APIKey + "&units=imperial";
-        
-        getCityData(APIKey, queryURL, city);
-        // localStorage.setItem(city, JSON.stringify(cityObject));
-        if (cityArray.indexOf(city) != -1) {
-            cityArray = deleteElement(cityArray.indexOf(city), cityArray);
-        }
-        cityArray.push(city);
-        console.log(cityArray);
-
-        updateHistory();
-    });
 
     function deleteElement(index, array) {
         var tempArray = [];
@@ -69,14 +89,18 @@ $(document).ready(function() {
     }
     function updateHistory() {
         $("#searchHistory").empty();
-        for (var i = 0; i < cityArray.length; i++) {
-            var newBtn = $("<button>");
-            newBtn.addClass("history city");
-            newBtn.attr("data-name", cityArray[i]);
-            newBtn.text(cityArray[i]);
-            // newLi.append(newBtn);
-            $("#searchHistory").prepend(newBtn);
-        }
+        console.log(JSON.parse(localStorage.getItem("cityArray")));
+        if (JSON.parse(localStorage.getItem("cityArray")) !== null) {
+            cityArray = JSON.parse(localStorage.getItem("cityArray"));
+            for (var i = 0; i < cityArray.length; i++) {
+                var newBtn = $("<button>");
+                newBtn.addClass("history");
+                newBtn.attr("data-name", cityArray[i]);
+                newBtn.text(cityArray[i]);
+                // newLi.append(newBtn);
+                $("#searchHistory").prepend(newBtn);
+            }
+        } 
     }
     
     function getUVIndex(APIKey, UVqueryURL) {
