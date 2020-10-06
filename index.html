@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Hello World</title>
+        <title>Weather</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
@@ -31,7 +31,7 @@
                                 <h5>Search for a City:</h5>
                                 <form class="form-inline">
                                     <div class="form-group row">
-                                        <input class="form-control" id="city" type="text">
+                                        <input class="form-control city" id="city" type="text">
                                         <button type="button" class="btn btn-primary" id="searchBtn"><img>S</button> 
                                     </div>
                                                                                
@@ -41,6 +41,7 @@
                         <section class="row">
                             <section class="col-md-12" id="searchHistory">
                                 <!-- search history list  -->
+                                
                             </section>
                         </section>
                     </section>
@@ -49,11 +50,11 @@
                         <section class="row">
                             <section class="col-md-12" id="cityData">
                                 <!-- City weather data box  -->
-                                <h2 id="cityAndDate">Atlanta</h2>
+                                <p id="cityAndDate">Atlanta</p>
                                 <p id="temperature">hot</p>
                                 <p id="humidity">Humid</p>
                                 <p id="windSpeed">no wind</p>
-                                <p id="UVIndex">UV high</p>
+                                <p id="UVIndex"><p id="UVNumber"></p></p>
                             </section>
                         </section>
                         <section class="row">
