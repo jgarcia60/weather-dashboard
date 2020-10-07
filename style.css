@@ -2,15 +2,20 @@ nav {
     background-color: rgb(58, 51, 51);
 }
 
+#searchIcon {
+    margin: 0;
+    padding: 0;
+}
 #header {
     text-align: center;
     color: white;
 }
 
 #cityData {
-    border-style: solid;
+    margin-top: 2%;
     border: gray;
-
+    border-style: solid;
+    border-radius: 15px;
 }
 
 #cityAndDate {
@@ -90,7 +95,7 @@ p {
     font-size: 24px;
     font-weight: 800;
 }
-.FiveDayForecast {
+.FiveDayForecast{
     text-align: center;
     background-color: rgb(36, 87, 226);
     color: white;
@@ -110,4 +115,11 @@ img {
 #date {
     font-size: 20px;
     font-weight: 700;
+}
+.hidden {
+    display: none;
+}
+
+.show {
+    display: block;
 }

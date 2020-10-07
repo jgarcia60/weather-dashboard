@@ -22,7 +22,17 @@ $(document).ready(function() {
     
     if (JSON.parse(localStorage.getItem("cityArray")) == null) {
         var cityArray = [];
-    } else {
+        console.log(cityArray.length);
+        if (cityArray.length < 1) {
+            // $("#WeatherEls").attr("class", "row hidden");
+            // $("#FiveDayText").attr("class", "col-md-12 hidden");
+            for (var i = 1; i < 6; i++) {
+                $("#" + i).empty();
+            }
+        }
+    } else { 
+        // $("#WeatherEls").attr("class", "row show");
+        // $("#FiveDayText").attr("class", "col-md-12 show");
         var cityArray = JSON.parse(localStorage.getItem("cityArray"));
         // setupDashboard(cityArray);
         city = cityArray[cityArray.length - 1];
@@ -33,8 +43,34 @@ $(document).ready(function() {
     }
     
     
+    $("#city").on("keydown", function(event) { //clicking this erases current list
+        
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            // console.log("you pressed enter");
+            city = $(("#city")).val();
+            if (city == "") {
+                alert("Please type in a city");
+            } else {
+                queryURL = "https://api.openweathermap.org/data/2.5/weather?" + "q=" + city + "&appid=" + APIKey + "&units=imperial";
+            
+                getCityData(APIKey, queryURL, city);
+                // localStorage.setItem(city, JSON.stringify(cityObject));
+                if (cityArray.indexOf(city) != -1) {
+                    cityArray = deleteElement(cityArray.indexOf(city), cityArray);
+                }
+                cityArray.push(city);
+                localStorage.setItem("cityArray", JSON.stringify(cityArray));
+                // console.log(cityArray);
+        
+                updateHistory();
+            }
+        }
+    });
     
-    $("#searchBtn").on("click", function() { //clicking this erases current list
+            
+    $("#searchBtn").on("click", function(event) { //clicking this erases current list
+        event.preventDefault();
         // $(".search").on("click", function() {
             // console.log($(this).val());
             city = $(("#city")).val();
@@ -74,8 +110,7 @@ $(document).ready(function() {
     
             updateHistory();
     });
-    // $("#searchHistory").on("click", function() {
-        // $(".search").on("click", function() {
+   
 
 
     function getCityData(APIKey, queryURL) {
@@ -115,7 +150,7 @@ $(document).ready(function() {
     }
     function updateHistory() {
         $("#searchHistory").empty();
-        console.log(JSON.parse(localStorage.getItem("cityArray")));
+        // console.log(JSON.parse(localStorage.getItem("cityArray")));
         if (JSON.parse(localStorage.getItem("cityArray")) !== null) {
             cityArray = JSON.parse(localStorage.getItem("cityArray"));
             for (var i = 0; i < cityArray.length; i++) {
@@ -135,8 +170,8 @@ $(document).ready(function() {
             method: "GET"
             }).then(function(response) {
                 // console.log(response);
-                var UVIndex = response.value;
-                if (UVIndex > 6) {
+                var UVIndex = parseFloat(response.value);
+                if (UVIndex > 6.00) {
                     $("#UVNumber").addClass("hiUV");
                 } else if (UVIndex > 3) {
                     $("#UVNumber").addClass("hiUV");
@@ -153,20 +188,21 @@ $(document).ready(function() {
             url: FiveDayQueryURL,
             method: "GET"
         }).then(function(response) {
-            console.log(response);
+
+            // console.log(response);
             var todayIcon = response.daily[0].weather[0].icon;
             todayIcon = parseInt(todayIcon.slice(0,2));
-            
+
             // var todayImg = $("<img>");
             var todayImg = $("#todayImg");
             todayImg.attr("src", weatherArray[todayIcon]);
             todayImg.attr("id", "todayImg");
-            todayImg.attr("height", "50px");
-            todayImg.attr("width", "50px");
+            todayImg.attr("height", "60px");
+            todayImg.attr("width", "60px");
             todayImg.attr("float", "left");
             // $("#todayImg").append(todayImg);
             // $("#WeatherEls").empty();
-            
+
             for (var i = 1; i < 6; i++) {
                 $("#" + i).empty();
                 // $(".FiveDayForecast").empty();
