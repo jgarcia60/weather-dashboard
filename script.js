@@ -20,26 +20,22 @@ $(document).ready(function() {
     "http://openweathermap.org/img/wn/04d@2x.png", "l", "l", "l", "l", "http://openweathermap.org/img/wn/09d@2x.png", 
     "http://openweathermap.org/img/wn/10d@2x.png", "http://openweathermap.org/img/wn/11d@2x.png", "l", "http://openweathermap.org/img/wn/13d@2x.png"];
     
+    //check if cityArray exists, if not then initialize array
     if (JSON.parse(localStorage.getItem("cityArray")) == null) {
         var cityArray = [];
-        console.log(cityArray.length);
+        // console.log(cityArray.length);
         if (cityArray.length < 1) {
-            // $("#WeatherEls").attr("class", "row hidden");
-            // $("#FiveDayText").attr("class", "col-md-12 hidden");
+            //empty the current city history if the city array is empty
             for (var i = 1; i < 6; i++) {
                 $("#" + i).empty();
             }
         }
-    } else { 
-        // $("#WeatherEls").attr("class", "row show");
-        // $("#FiveDayText").attr("class", "col-md-12 show");
+    } else { //this executes if city array exists
         var cityArray = JSON.parse(localStorage.getItem("cityArray"));
-        // setupDashboard(cityArray);
+        
         city = cityArray[cityArray.length - 1];
         queryURL = "https://api.openweathermap.org/data/2.5/weather?" + "q=" + city + "&appid=" + APIKey + "&units=imperial";
-        // FiveDayQueryURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + response.coord.lat + "&lon=" + response.coord.lon + "&exclude=current,minutely,hourly,alerts" + "&appid=" + APIKey;
         getCityData(APIKey, queryURL);
-        // getFiveDayForecast(APIKeyTwo, FiveDayQueryURL);
     }
     
     
@@ -112,7 +108,7 @@ $(document).ready(function() {
     });
    
 
-
+//this function gets the current city weather conditions
     function getCityData(APIKey, queryURL) {
         $.ajax({
         url: queryURL,
@@ -121,7 +117,7 @@ $(document).ready(function() {
             // console.log(response.clouds.all);
             var cityObject = response;
             // console.log(cityObject);
-            // setupDashboard(cityObject);
+            //assign variables from the returned object
             var windSpeed = cityObject.wind.speed;
             var humidity = cityObject.main.humidity;
             var temp = cityObject.main.temp;
@@ -131,12 +127,15 @@ $(document).ready(function() {
             $("#temperature").text(" Temperature: " + temp + " " + "°F");
             $("#cityAndDate").text(location + " (" + dateDisplay + ")");
             UVqueryURL = "http://api.openweathermap.org/data/2.5/uvi?lat=" + response.coord.lat + "&lon=" + response.coord.lon + "&appid=" + APIKey;
+            //UV index requires lat and lon from the above "response", so run the function after the lat and lon are collected
             getUVIndex(APIKey, UVqueryURL);
             FiveDayQueryURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + response.coord.lat + "&lon=" + response.coord.lon + "&exclude=current,minutely,hourly,alerts" + "&appid=" + APIKey + "&units=imperial";
             getFiveDayForecast(APIKey, FiveDayQueryURL);
         });
     }
 
+    //this function allows the city array to behave as a least recently used cache,
+    //where the most recently used item is listed first
     function deleteElement(index, array) {
         var tempArray = [];
         for (var i = 0; i < array.length; i++) {
@@ -148,6 +147,8 @@ $(document).ready(function() {
         }
         return tempArray;
     }
+
+    //this function retrieves the city array from local storage and refreshes the displayed search history
     function updateHistory() {
         $("#searchHistory").empty();
         // console.log(JSON.parse(localStorage.getItem("cityArray")));
@@ -164,6 +165,7 @@ $(document).ready(function() {
         } 
     }
     
+    //simple API call to get the UV index and assigns the css class based on the UV index value
     function getUVIndex(APIKey, UVqueryURL) {
         $.ajax({
             url: UVqueryURL,
@@ -183,6 +185,7 @@ $(document).ready(function() {
             });
     }
 
+    //five day forecast API call
     function getFiveDayForecast(APIKey, FiveDayQueryURL) {
         $.ajax({
             url: FiveDayQueryURL,
@@ -200,18 +203,19 @@ $(document).ready(function() {
             todayImg.attr("height", "60px");
             todayImg.attr("width", "60px");
             todayImg.attr("float", "left");
-            // $("#todayImg").append(todayImg);
-            // $("#WeatherEls").empty();
+            
 
             for (var i = 1; i < 6; i++) {
+                //must empty contents first to avoid rewriting current elements again
                 $("#" + i).empty();
-                // $(".FiveDayForecast").empty();
+                //estatblish the id as an index for each element
                 var day = parseInt(dateArray[2]) + i;
                 var id = i;
                 //add new row for day
                 $("#" + i).append($("<div>").addClass("row"))
                 var newDayRow = $("<div>");
                 newDayRow.addClass("row");
+                //append column with date info
                 newDayRow.append($("<div>").addClass("col-md-12").attr("id", "date").text(dateArray[1] + "/" + day + "/" + dateArray[0]));
                 $("#" + i).append(newDayRow);
 
@@ -219,11 +223,13 @@ $(document).ready(function() {
                 var newImgRow = $("<div>").addClass("row");
                 var icon = response.daily[i].weather[0].icon;
                 
+                //collect icon info for appending image later
                 icon = icon.slice(0, 2);
                 // console.log(icon);
                 icon = parseInt(icon);
                 newImgRow.append($("<div>").addClass("col-md-12"));
                 var imgTag = $("<img>");
+                //retrieve matching weather icon from object defined on line 18
                 imgTag.attr("src", weatherArray[icon]);
                 imgTag.attr("max-height", "30px");
                 imgTag.attr("max-width", "30px");
