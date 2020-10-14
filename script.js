@@ -15,10 +15,10 @@ $(document).ready(function() {
     var FiveDayQueryURL;
     var lat;
     var lon;
-    var weatherArray = ["nope", "http://openweathermap.org/img/wn/01d@2x.png", 
+    var weatherArray = ["nope", "https://openweathermap.org/img/wn/01d@2x.png", 
     "http://openweathermap.org/img/wn/02d@2x.png", "http://openweathermap.org/img/wn/03d@2x.png", 
     "http://openweathermap.org/img/wn/04d@2x.png", "l", "l", "l", "l", "http://openweathermap.org/img/wn/09d@2x.png", 
-    "http://openweathermap.org/img/wn/10d@2x.png", "http://openweathermap.org/img/wn/11d@2x.png", "l", "http://openweathermap.org/img/wn/13d@2x.png"];
+    "https://openweathermap.org/img/wn/10d@2x.png", "https://openweathermap.org/img/wn/11d@2x.png", "l", "https://openweathermap.org/img/wn/13d@2x.png"];
     
     //check if cityArray exists, if not then initialize array
     if (JSON.parse(localStorage.getItem("cityArray")) == null) {
@@ -126,7 +126,7 @@ $(document).ready(function() {
             $("#humidity").text("Humidity: " + humidity + " %");
             $("#temperature").text(" Temperature: " + temp + " " + "°F");
             $("#cityAndDate").text(location + " (" + dateDisplay + ")");
-            UVqueryURL = "http://api.openweathermap.org/data/2.5/uvi?lat=" + response.coord.lat + "&lon=" + response.coord.lon + "&appid=" + APIKey;
+            UVqueryURL = "https://api.openweathermap.org/data/2.5/uvi?lat=" + response.coord.lat + "&lon=" + response.coord.lon + "&appid=" + APIKey;
             //UV index requires lat and lon from the above "response", so run the function after the lat and lon are collected
             getUVIndex(APIKey, UVqueryURL);
             FiveDayQueryURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + response.coord.lat + "&lon=" + response.coord.lon + "&exclude=current,minutely,hourly,alerts" + "&appid=" + APIKey + "&units=imperial";
