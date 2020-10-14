@@ -176,7 +176,7 @@ $(document).ready(function() {
                 if (UVIndex > 6.00) {
                     $("#UVNumber").addClass("hiUV");
                 } else if (UVIndex > 3) {
-                    $("#UVNumber").addClass("hiUV");
+                    $("#UVNumber").addClass("medUV");
                 } else {
                     $("#UVNumber").addClass("lowUV");
                 }
